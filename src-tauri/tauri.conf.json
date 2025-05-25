@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-test",
+  "productName": "爱看小说",
   "version": "0.1.0",
   "identifier": "com.tauri-test.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-test",
+        "title": "爱看小说",
         "width": 800,
         "height": 600
       }

@@ -1,50 +1,61 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import Navigation from './components/Navigation';
+
+// Import pages
+const SplashScreen = React.lazy(() => import('./pages/SplashScreen'));
+const Home = React.lazy(() => import('./pages/Home'));
+const Library = React.lazy(() => import('./pages/Library'));
+const Drama = React.lazy(() => import('./pages/Drama'));
+const DramaPlayer = React.lazy(() => import('./pages/DramaPlayer'));
+const Settings = React.lazy(() => import('./pages/Settings'));
+const NovelDetail = React.lazy(() => import('./pages/NovelDetail'));
+const Reader = React.lazy(() => import('./pages/Reader'));
+const Search = React.lazy(() => import('./pages/Search'));
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [showSplash, setShowSplash] = useState(true);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useEffect(() => {
+    // 设置启动画面定时器
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <main className="container">
-      <h1>恰同学少年 风华正茂；书生意气 挥斥方裘</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <Router>
+      <AppProvider>
+        <div className="app-container min-h-screen bg-gray-100 dark:bg-gray-900">
+          <React.Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              </div>
+            }
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={showSplash ? <SplashScreen /> : <Navigate to="/home" replace />}
+              />
+              <Route path="/home" element={<Home />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/drama" element={<Drama />} />
+              <Route path="/drama/:id" element={<DramaPlayer />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/novel/:id" element={<NovelDetail />} />
+              <Route path="/novel/:id/chapter/:chapterId" element={<Reader />} />
+              <Route path="/search" element={<Search />} />
+            </Routes>
+          </React.Suspense>
+          {!showSplash && <Navigation />}
+        </div>
+      </AppProvider>
+    </Router>
   );
 }
 
