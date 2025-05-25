@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-test",
+        "title": "爱看小说",
         "width": 800,
         "height": 600
       }
