@@ -1,0 +1,131 @@
+name: Android build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 允许 GITHUB_TOKEN 有权限创建 Release
+permissions:
+  contents: write
+
+jobs:
+  android_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 拉取仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 生成简短提交哈希，供构建产物命名使用
+      - name: Set short git SHA
+        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
+      # 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 安装前端依赖（例如 Vite）
+      - name: Install frontend dependencies
+        run: npm install
+
+      # 构建前端资源（Tauri 会用到）
+      - name: Build frontend (Vite)
+        run: npm run build
+
+      # 设置 Rust 工具链并添加 Android 架构目标
+      - name: Setup Rust and Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+
+      # 缓存 Rust 编译产物和依赖，加速构建
+      - name: Cache Rust build
+        id: cache-rust
+        uses: actions/cache@v3
+        with:
+          path: |
+            target
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: rust-cache-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            rust-cache-${{ runner.os }}-
+
+      # 打印缓存命中情况
+      - name: Check Rust cache hit
+        run: |
+          if [ "${{ steps.cache-rust.outputs.cache-hit }}" = "true" ]; then
+            echo "✅ Rust cache HIT — 跳过依赖编译"
+          else
+            echo "❌ Rust cache MISS — 重新编译依赖"
+          fi
+
+      # 安装 Linux 环境依赖（GTK, WebKit）
+      - name: Install Linux dependencies for Tauri
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.1
+
+      # 安装 Java（用于 Android 构建）
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 安装 Android SDK、NDK 和 CMake
+      - name: Set up Android NDK
+        uses: android-actions/setup-android@v3
+        with:
+          ndk-version: '25.2.9519653'
+          cmake-version: '3.22.1'
+
+      # 配置 ANDROID_HOME 和 NDK_HOME 环境变量
+      - name: Configure environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "NDK_HOME=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_NDK_ROOT" >> $GITHUB_PATH
+          ls -la $ANDROID_NDK_ROOT
+
+      # 初始化 Tauri 的 Android 项目结构
+      - name: Initialize Android target for Tauri
+        run: |
+          npm run tauri android init
+          npm run tauri icon public/images/yuanshen.jpg
+
+      # 构建未签名 APK，仅构建 arm64 架构
+      - name: Build unsigned Android APK with Tauri
+        run: npm run tauri android build -- --target aarch64
+
+      # 解码 keystore 文件（已 base64 编码并存储为 Secret）
+      - name: Decode keystore from base64
+        run: |
+          echo "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
+
+      # 使用 apksigner 签名 APK（自动获取最新 build-tools 路径）
+      - name: Sign APK
+        run: |
+          BUILD_TOOLS_VERSION=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n1)
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner sign \
+            --ks my-release-key.jks \
+            --ks-key-alias ${{ secrets.SIGNING_KEY_ALIAS }} \
+            --ks-pass pass:${{ secrets.SIGNING_KEYSTORE_PASSWORD }} \
+            --key-pass pass:${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }} \
+            --out app-universal-release-signed.apk \
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+
+      # 上传签名后的 APK 到 GitHub Release，方便手机下载
+      - name: Upload signed APK to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: apk-release
+          name: APK Release ${{ env.SHORT_SHA }}
+          files: app-universal-release-signed.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
