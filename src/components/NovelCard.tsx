@@ -28,7 +28,7 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, ranking, showRanking = fal
               {ranking}
             </div>
           )}
-          {novel.status === 'ongoing' && (
+          {novel.status === '连载中' && (
             <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">
               连载
             </div>

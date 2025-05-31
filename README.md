@@ -3,6 +3,7 @@
 ```shell
 # nodejs 必须大于等于 18 版本
 npm install
+npm install --save-dev @tauri-apps/cli
 
 # 网页
 npm run dev
@@ -39,6 +40,6 @@ base64 -i my-release-key.jks -o keystore.b64
 
 ## 3. 在 GitHub 仓库里添加 Secret
 - SIGNING_KEYSTORE_BASE64 复制自 keystore.b64 文件
-- SIGNING_KEY_ALIAS 创建 keystore 时设置的别名
+- SIGNING_KEY_ALIAS 创建 keystore 时设置的别名（my-key-alias）
 - SIGNING_KEYSTORE_PASSWORD keystore 密码
 - SIGNING_KEY_ALIAS_PASSWORD key alias 密码

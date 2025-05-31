@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { novels } from '../data/novels';
 import { useAppContext } from '../context/AppContext';
-import { ChevronLeft, ChevronRight, Settings, Bookmark, Sun, Moon, Book } from 'lucide-react';
+import { ChevronLeft, Settings, Bookmark, Sun, Moon, Book } from 'lucide-react';
 
 const Reader = () => {
   const { id, chapterId } = useParams();
   const navigate = useNavigate();
-  const { readingPreferences, updateReadingPreferences, updateReadingProgress, addBookmark, bookmarks } = useAppContext();
+  const { readingPreferences, updateReadingPreferences, addBookmark, bookmarks } = useAppContext();
   const [showControls, setShowControls] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -123,7 +123,7 @@ const Reader = () => {
       if ((e.target as Element).closest('.settings-panel')) return;
 
       const touchEndX = e.touches[0].clientX;
-      const touchEndY = e.touches[0].clientY;
+      // const touchEndY = e.touches[0].clientY;
       const deltaX = touchStartX - touchEndX;
       const deltaY = Math.abs(touchStartY - e.touches[0].clientY);
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Star, Clock, Search } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Play, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Drama {

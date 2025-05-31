@@ -28,7 +28,7 @@ export interface ApiResponse<T> {
     email: string;
     name: string;
     avatar?: string;
-    createdAt: string;
+    created_at: string;
   }
   
   // Novel Types

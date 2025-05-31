@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppContext } from '../context/AppContext';
 import NovelCard from '../components/NovelCard';
 import { BookOpen, Clock } from 'lucide-react';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { LogOut, User, Bell, Shield, HelpCircle, Info } from 'lucide-react';
 import LoginModal from '../components/LoginModal';

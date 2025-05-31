@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { novels } from '../data/novels';
-import NovelCard from '../components/NovelCard';
+// import NovelCard from '../components/NovelCard';
 import SearchBar from '../components/SearchBar';
 import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

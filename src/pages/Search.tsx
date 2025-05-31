@@ -55,7 +55,7 @@ const Search = () => {
           readers: Math.floor(Math.random() * 100000).toLocaleString(),
           rating: novel.rating.toFixed(1),
           category: novel.genre[0],
-          status: novel.status === 'ongoing' ? '连载中' : '已完结'
+          status: novel.status === '连载中' ? '连载中' : '已完结'
         }));
 
       // Simulate pagination
