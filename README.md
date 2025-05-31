@@ -18,11 +18,11 @@ npm run tauri ios dev
 ```
 
 # 效果展示
-![书城](public/shucheng.png)
-![搜索](public/sousuo.png)
-![小说详情](public/novelDetail.png)
-![小说阅读](public/reader.png)
-![设置](public/settings.png)
+<img src="public/shucheng.png" alt="书城" width="200"/>
+<img src="public/sousuo.png" alt="搜索" width="200"/>
+<img src="public/novelDetail.png" alt="小说详情" width="200"/>
+<img src="public/reader.png" alt="小说阅读" width="200"/>
+<img src="public/settings.png" alt="设置" width="200"/>
 
 # android app 签名
 
