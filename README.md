@@ -1,4 +1,3 @@
-
 # 快速开始
 ```shell
 # nodejs 必须大于等于 18 版本
@@ -17,6 +16,13 @@ npm run tauri android dev
 # ios app
 npm run tauri ios dev
 ```
+
+# 效果展示
+![书城](public/shucheng.png)
+![搜索](public/sousuo.png)
+![小说详情](public/novelDetail.png)
+![小说阅读](public/reader.png)
+![设置](public/settings.png)
 
 # android app 签名
 

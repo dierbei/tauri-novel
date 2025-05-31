@@ -97,7 +97,7 @@ jobs:
       - name: Initialize Android target for Tauri
         run: |
           npm run tauri android init
-          npm run tauri icon public/images/yuanshen.jpg
+          npm run tauri icon public/logo.jpg
 
       # 构建未签名 APK，仅构建 arm64 架构
       - name: Build unsigned Android APK with Tauri
