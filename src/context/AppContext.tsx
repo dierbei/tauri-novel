@@ -99,6 +99,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const register = async (data: LoginData) => {
     const response = await authApi.register(data);
+    console.log(response);
     localStorage.setItem('token', response.data.token);
     setUser(response.data.user);
   };
