@@ -7,6 +7,9 @@
 
 A cross-platform novel reading application built with Tauri, React, and TypeScript. Supports desktop, Android, and iOS platforms.
 
+- backend github repository：https://github.com/dierbei/tauri-novel-backend
+
+
 ## Screenshots
 
 <img src="public/shucheng.png" alt="Book Store" width="350"/>

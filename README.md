@@ -7,6 +7,8 @@
 
 一个使用 Tauri、React 和 TypeScript 构建的跨平台小说阅读应用。支持桌面、Android 和 iOS 平台。
 
+- 后端仓库：https://github.com/dierbei/tauri-novel-backend
+
 ## 效果展示
 
 <img src="public/shucheng.png" alt="Book Store" width="350"/>

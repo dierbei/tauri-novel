@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 // Sample vertical video from a reliable source
-const sampleVideo = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
+const sampleVideo = "http://tauri-novel.19990402.cn/video-1.mp4";
 
 interface DramaEpisode {
   id: string;
